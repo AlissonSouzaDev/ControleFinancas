@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "controlefinancas",
+  "productName": "Controle de Finanças",
   "version": "0.1.0",
   "identifier": "com.user.controlefinancas",
   "build": {
@@ -12,8 +12,8 @@
   "app": {
     "windows": [
       {
-        "title": "controlefinancas",
-        "fullscreen": true
+        "title": "Controle de Finanças",
+        "maximized": true
       }
     ],
     "security": {
