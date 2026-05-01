@@ -1,7 +1,4 @@
-interface CampoProps {
-  label: string
-  children: React.ReactNode
-}
+import { CampoProps } from '../../../types'
 
 export function Campo({ label, children }: CampoProps) {
   return (

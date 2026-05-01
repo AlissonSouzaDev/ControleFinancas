@@ -1,15 +1,7 @@
-import { Plus, Pencil, Trash2 } from 'lucide-react'
-import { Registro } from '../types'
+import { Plus, Pencil, Trash2, BarChart2, Star } from 'lucide-react'
+import { AcoesBarProps } from '../../../types'
 
-interface AcoesBarProps {
-  selecionado: Registro | null
-  onCriar: () => void
-  onAlterar: () => void
-  onApagar: () => void
-  onApagarTodos: () => void
-}
-
-export function AcoesBar({ selecionado, onCriar, onAlterar, onApagar, onApagarTodos }: AcoesBarProps) {
+export function AcoesBar({ selecionado, onCriar, onAlterar, onAlterarStatus, onAlterarPrioridade, onApagar, onApagarTodos }: AcoesBarProps) {
   return (
     <div className="flex items-center gap-3">
       <button
@@ -24,6 +16,20 @@ export function AcoesBar({ selecionado, onCriar, onAlterar, onApagar, onApagarTo
         className="flex items-center gap-2 bg-[#dce9ff] dark:bg-slate-700 dark:text-slate-200 border border-gray-300 dark:border-slate-600 text-[#00355f] text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
       >
         <Pencil size={15} /> Alterar registro
+      </button>
+      <button
+        onClick={onAlterarStatus}
+        disabled={!selecionado}
+        className="flex items-center gap-2 bg-[#dce9ff] dark:bg-slate-700 dark:text-slate-200 border border-gray-300 dark:border-slate-600 text-[#00355f] text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+      >
+        <BarChart2 size={15} /> Alterar Status
+      </button>
+      <button
+        onClick={onAlterarPrioridade}
+        disabled={!selecionado}
+        className="flex items-center gap-2 bg-[#dce9ff] dark:bg-slate-700 dark:text-slate-200 border border-gray-300 dark:border-slate-600 text-[#00355f] text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+      >
+        <Star size={15} /> Alterar Prioridade
       </button>
       <button
         onClick={onApagar}

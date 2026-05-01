@@ -1,9 +1,5 @@
-import { formatarMoeda } from '../utils/formatters'
-import { Totais } from '../types'
-
-interface CardsResumoProps {
-  totais: Totais
-}
+import { CardsResumoProps } from '../../../types'
+import { formatarMoeda } from '../../../utils/formatters'
 
 export function CardsResumo({ totais }: CardsResumoProps) {
   return (
