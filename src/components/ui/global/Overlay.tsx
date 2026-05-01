@@ -1,6 +1,4 @@
-interface OverlayProps {
-  children: React.ReactNode
-}
+import { OverlayProps } from '../../../types'
 
 export function Overlay({ children }: OverlayProps) {
   return (
