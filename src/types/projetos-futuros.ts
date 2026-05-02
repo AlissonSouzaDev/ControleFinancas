@@ -1,4 +1,4 @@
-export interface PlanoFuturo {
+export interface ProjetoFuturo {
   id: number
   descricao: string
   periodo: string | null
@@ -10,26 +10,26 @@ export interface PlanoFuturo {
   alterado_em: string
 }
 
-export interface DadosPlano {
+export interface DadosProjeto {
   descricao: string
-  status: PlanoFuturo['status']
+  status: ProjetoFuturo['status']
   periodo: string | null
   duracao_valor: string | null
-  duracao_unidade: PlanoFuturo['duracao_unidade']
+  duracao_unidade: ProjetoFuturo['duracao_unidade']
   valor: number | null
 }
 
-export type ModalPlanos = 'criar' | 'alterar' | 'apagar' | null
+export type ModalProjetos = 'criar' | 'alterar' | 'apagar' | null
 
-export interface ListaPlanosProps {
-  planos: PlanoFuturo[]
+export interface ListaProjetosProps {
+  projetos: ProjetoFuturo[]
   selecionado: number | null
-  onSelecionar: (p: PlanoFuturo | null) => void
+  onSelecionar: (p: ProjetoFuturo | null) => void
 }
 
 export interface ModalFormPlanoProps {
   titulo: string
-  inicial?: PlanoFuturo
-  onConfirmar: (dados: DadosPlano) => Promise<void>
+  inicial?: ProjetoFuturo
+  onConfirmar: (dados: DadosProjeto) => Promise<void>
   onCancelar: () => void
 }

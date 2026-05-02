@@ -1,10 +1,10 @@
-import { useMemo } from 'react'
+import { schemaAlterarStatus, AlterarStatusFormData as FormData } from '../../../schemas/orcamentos'
 import { ModalAlterarStatusProps } from '../../../types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Overlay } from '../../ui/global/Overlay'
 import { useForm } from 'react-hook-form'
+import { useMemo } from 'react'
 import { Campo } from '../../ui/global/Campo'
-import { schemaAlterarStatus, AlterarStatusFormData as FormData } from '../../../schemas/registros'
 
 const inputClass = "w-full border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-slate-700 text-[#1C2B3A] dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#1C2B3A] dark:focus:ring-slate-400 placeholder:text-gray-400 dark:placeholder:text-slate-500"
 const errorClass = "text-xs text-red-500 mt-0.5"

@@ -1,9 +1,9 @@
-import { Fragment } from 'react'
+import { StatusPagamento } from '../global/StatusPagamento'
 import { ListaPagarProps } from '../../../types'
 import { formatarMoeda } from '../../../utils/formatters'
-import { StatusPagamento } from '../global/StatusPagamento'
+import { Fragment } from 'react'
 
-export function ListaPagar({ registros, selecionado, onSelecionar }: ListaPagarProps) {
+export function ListaPagar({ pagamentos, selecionado, onSelecionar }: ListaPagarProps) {
   return (
     <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-300 dark:border-slate-700 shadow-sm flex flex-col transition-colors overflow-hidden">
       <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-slate-700">
@@ -12,11 +12,11 @@ export function ListaPagar({ registros, selecionado, onSelecionar }: ListaPagarP
           <h2 className="font-bold text-[#1C2B3A] dark:text-white">A Pagar</h2>
         </div>
         <span className="text-xs text-gray-800 dark:text-slate-300">
-          {registros.length} {registros.length === 1 ? 'Registro' : 'Registros'}
+          {pagamentos.length} {pagamentos.length === 1 ? 'Registro' : 'registros'}
         </span>
       </div>
       <div className="flex-1 overflow-y-auto">
-        {registros.length === 0 ? (
+        {pagamentos.length === 0 ? (
           <p className="text-sm text-gray-800 dark:text-slate-300 text-center py-10">Nenhum registro neste período.</p>
         ) : (
           <table className="w-full text-sm">
@@ -30,7 +30,7 @@ export function ListaPagar({ registros, selecionado, onSelecionar }: ListaPagarP
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-slate-700">
-              {registros.map(r => (
+              {pagamentos.map(r => (
                 <Fragment key={r.id}>
                   <tr
                     onClick={() => onSelecionar(selecionado === r.id ? null : r)}

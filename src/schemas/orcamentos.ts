@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const schemaRegistroForm = z.object({
+export const schemaOrcamentoForm = z.object({
   tipo: z.enum(['a_pagar', 'a_receber']),
   descricao: z.string().min(1, 'Campo Descrição é obrigatório'),
   data_vencimento: z.string().min(1, 'Campo Data de Vencimento é obrigatório'),
@@ -13,7 +13,7 @@ export const schemaRegistroForm = z.object({
   { message: 'Não pode ser maior que o Valor Total', path: ['valor_realizado'] }
 )
 
-export type RegistroFormData = z.infer<typeof schemaRegistroForm>
+export type OrcamentoFormData = z.infer<typeof schemaOrcamentoForm>
 
 const _baseAlterarStatus = z.object({
   status_pagamento: z.enum(['pendente', 'parcial', 'quitado']),

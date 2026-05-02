@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'
 
 const itens = [
   { to: '/', label: 'Orçamento Mensal', icon: '/icons/dashboard.svg' },
-  { to: '/planos-futuros', label: 'Planos Futuros', icon: '/icons/calendar_clock.svg' },
+  { to: '/projetos-futuros', label: 'Projetos Futuros', icon: '/icons/calendar_clock.svg' },
 ]
 
 export function Sidebar({ aberta, onFechar }: SidebarProps) {

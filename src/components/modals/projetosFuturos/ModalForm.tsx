@@ -1,10 +1,10 @@
-import { PlanoFuturo, ModalFormPlanoProps } from '../../../types'
+import { schemaProjetoForm, ProjetoFormData as FormData } from '../../../schemas/projetos'
+import { ProjetoFuturo, ModalFormPlanoProps } from '../../../types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
 import { Overlay } from '../../ui/global/Overlay'
 import { useForm } from 'react-hook-form'
 import { Campo } from '../../ui/global/Campo'
-import { schemaPlanoForm, PlanoFormData as FormData } from '../../../schemas/planos'
 
 const inputClass = "w-full border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-slate-700 text-[#1C2B3A] dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#1C2B3A] dark:focus:ring-slate-400 placeholder:text-gray-400 dark:placeholder:text-slate-500"
 const errorClass = "text-xs text-red-500 mt-0.5"
@@ -16,7 +16,7 @@ export function ModalForm({ titulo, inicial, onConfirmar, onCancelar }: ModalFor
     formState: { errors, isSubmitting },
     reset,
   } = useForm<FormData>({
-    resolver: zodResolver(schemaPlanoForm),
+    resolver: zodResolver(schemaProjetoForm),
     defaultValues: {
       descricao: inicial?.descricao ?? '',
       status: inicial?.status ?? 'ideia',
@@ -46,7 +46,7 @@ export function ModalForm({ titulo, inicial, onConfirmar, onCancelar }: ModalFor
       status: data.status,
       periodo: data.periodo || null,
       duracao_valor: data.duracao_valor || null,
-      duracao_unidade: (data.duracao_unidade || null) as PlanoFuturo['duracao_unidade'],
+      duracao_unidade: (data.duracao_unidade || null) as ProjetoFuturo['duracao_unidade'],
       valor: data.valor ? parseFloat(data.valor.replace(',', '.')) : null,
     })
   }

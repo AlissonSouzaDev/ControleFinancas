@@ -1,7 +1,7 @@
 import { useState, useLayoutEffect } from 'react'
 import { HashRouter, Routes, Route } from 'react-router-dom'
 import { OrcamentoMensal } from './pages/OrcamentoMensal'
-import { PlanosFuturos } from './pages/PlanosFuturos'
+import { ProjetosFuturos } from './pages/ProjetosFuturos'
 import { Sidebar } from './components/Sidebar'
 import { Header } from './components/Header'
 
@@ -27,7 +27,7 @@ function App() {
 
         <Routes>
           <Route path="/" element={<OrcamentoMensal />} />
-          <Route path="/planos-futuros" element={<PlanosFuturos />} />
+          <Route path="/projetos-futuros" element={<ProjetosFuturos />} />
         </Routes>
       </div>
     </HashRouter>

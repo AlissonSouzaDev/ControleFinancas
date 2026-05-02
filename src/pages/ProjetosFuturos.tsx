@@ -1,18 +1,18 @@
 import { useState, useEffect, useCallback } from 'react'
-import { PlanoFuturo, ModalPlanos } from '../types'
+import { ProjetoFuturo, ModalProjetos } from '../types'
 import { ModalConfirmar } from '../components/modals/global/ModalConfirmar'
-import { ListaPlanos } from '../components/ui/planosFuturos/ListaPlanos'
-import { ModalForm } from '../components/modals/planosFuturos/ModalForm'
+import { ListaProjetos } from '../components/ui/projetosFuturos/ListaProjetos'
+import { ModalForm } from '../components/modals/projetosFuturos/ModalForm'
 import { invoke } from '@tauri-apps/api/core'
 
-export function PlanosFuturos() {
-  const [planos, setPlanos] = useState<PlanoFuturo[]>([])
-  const [selecionado, setSelecionado] = useState<PlanoFuturo | null>(null)
-  const [modal, setModal] = useState<ModalPlanos>(null)
+export function ProjetosFuturos() {
+  const [projetos, setProjetos] = useState<ProjetoFuturo[]>([])
+  const [selecionado, setSelecionado] = useState<ProjetoFuturo | null>(null)
+  const [modal, setModal] = useState<ModalProjetos>(null)
 
   const carregar = useCallback(async () => {
-    const lista = await invoke<PlanoFuturo[]>('listar_planos')
-    setPlanos(lista)
+    const lista = await invoke<ProjetoFuturo[]>('listar_projetos')
+    setProjetos(lista)
   }, [])
 
   useEffect(() => { carregar() }, [carregar])
@@ -23,7 +23,7 @@ export function PlanosFuturos() {
     <main className="flex-1 px-8 py-6 flex flex-col gap-6">
       <div>
         <p className="text-xs text-gray-500 dark:text-slate-400 uppercase tracking-widest">Desenvolvimento de Ideias</p>
-        <h1 className="text-2xl font-bold text-[#1C2B3A] dark:text-white">Planos Futuros</h1>
+        <h1 className="text-2xl font-bold text-[#1C2B3A] dark:text-white">Projetos Futuros</h1>
       </div>
 
       <div className="flex items-center gap-3">
@@ -50,8 +50,8 @@ export function PlanosFuturos() {
         </button>
       </div>
 
-      <ListaPlanos
-        planos={planos}
+      <ListaProjetos
+        projetos={projetos}
         selecionado={selecionado?.id ?? null}
         onSelecionar={(p) => setSelecionado(selecionado?.id === p?.id ? null : p)}
       />

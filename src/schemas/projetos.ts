@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const schemaPlanoForm = z.object({
+export const schemaProjetoForm = z.object({
   descricao: z.string().min(1, 'Descrição é obrigatória'),
   status: z.enum(['ideia', 'planejando', 'em andamento', 'concluído']),
   periodo: z
@@ -24,4 +24,4 @@ export const schemaPlanoForm = z.object({
   { message: 'Preencha tanto a duração quanto a unidade', path: ['duracao_unidade'] }
 )
 
-export type PlanoFormData = z.infer<typeof schemaPlanoForm>
+export type ProjetoFormData = z.infer<typeof schemaProjetoForm>

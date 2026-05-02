@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 
-export * from './visao-geral'
-export * from './planos-futuros'
+export * from './orcamento-mensal'
+export * from './projetos-futuros'
 
 // --- Props globais de layout e UI ---
 
