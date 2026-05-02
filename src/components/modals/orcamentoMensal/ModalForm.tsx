@@ -1,4 +1,4 @@
-import { schemaRegistroForm, RegistroFormData as FormData } from '../../../schemas/registros'
+import { schemaOrcamentoForm, OrcamentoFormData as FormData } from '../../../schemas/orcamentos'
 import { useForm, useWatch } from 'react-hook-form'
 import { ModalFormProps } from '../../../types'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -10,7 +10,7 @@ const errorClass = "text-xs text-red-500 mt-0.5"
 
 export function ModalForm({ titulo, periodo, inicial, onConfirmar, onCancelar }: ModalFormProps) {
   const { register, handleSubmit, control, formState: { errors, isSubmitting } } = useForm<FormData>({
-    resolver: zodResolver(schemaRegistroForm),
+    resolver: zodResolver(schemaOrcamentoForm),
     defaultValues: {
       tipo: inicial?.tipo ?? 'a_pagar',
       descricao: inicial?.descricao ?? '',
@@ -49,7 +49,7 @@ export function ModalForm({ titulo, periodo, inicial, onConfirmar, onCancelar }:
               className="w-full border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm bg-gray-50 dark:bg-slate-700/50 text-gray-500 dark:text-slate-400 cursor-not-allowed"
             />
           </Campo>
-          <Campo label="Tipo de Registro">
+          <Campo label="Tipo de Pagamento">
             <select {...register('tipo')} className={inputClass}>
               <option value="a_pagar">A Pagar</option>
               <option value="a_receber">A Receber</option>

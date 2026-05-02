@@ -1,6 +1,6 @@
 mod db;
 mod migrations;
-mod registros;
+mod orcamento_mensal;
 mod planos_futuros;
 
 pub use db::DbState;
@@ -14,8 +14,7 @@ pub fn run() {
         .expect("Não foi possível obter o diretório de dados")
         .join("controlefinancas");
     std::fs::create_dir_all(&db_dir).expect("Falha ao criar diretório do banco");
-    let conn = Connection::open(db_dir.join("db.sqlite3"))
-        .expect("Falha ao abrir banco de dados");
+    let conn = Connection::open(db_dir.join("db.sqlite3")).expect("Falha ao abrir banco de dados");
 
     migrations::init_db(&conn);
 
@@ -23,14 +22,14 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .manage(DbState(Mutex::new(conn)))
         .invoke_handler(tauri::generate_handler![
-            registros::commands::criar_registro,
-            registros::commands::listar_registros,
-            registros::commands::alterar_registro,
-            registros::commands::apagar_registro,
-            registros::commands::apagar_todos_mes,
-            registros::commands::alterar_status,
-            registros::commands::alterar_prioridade,
-            registros::commands::buscar_totais,
+            orcamento_mensal::commands::criar_registro,
+            orcamento_mensal::commands::listar_registros,
+            orcamento_mensal::commands::alterar_registro,
+            orcamento_mensal::commands::apagar_registro,
+            orcamento_mensal::commands::apagar_todos_mes,
+            orcamento_mensal::commands::alterar_status,
+            orcamento_mensal::commands::alterar_prioridade,
+            orcamento_mensal::commands::buscar_totais,
             planos_futuros::commands::criar_plano,
             planos_futuros::commands::listar_planos,
             planos_futuros::commands::alterar_plano,

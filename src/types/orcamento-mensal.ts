@@ -1,4 +1,4 @@
-export interface Registro {
+export interface Pagamento {
   id: number
   periodo: string
   tipo: 'a_pagar' | 'a_receber'
@@ -32,7 +32,7 @@ export interface CardsResumoProps {
 }
 
 export interface AcoesBarProps {
-  selecionado: Registro | null
+  selecionado: Pagamento | null
   onCriar: () => void
   onAlterar: () => void
   onAlterarStatus: () => void
@@ -42,7 +42,7 @@ export interface AcoesBarProps {
 }
 
 export interface ModalAlterarStatusProps {
-  registro: Registro
+  registro: Pagamento
   onConfirmar: (dados: {
     status_pagamento: 'pendente' | 'parcial' | 'quitado'
     valor_realizado: number | null
@@ -52,15 +52,15 @@ export interface ModalAlterarStatusProps {
 }
 
 export interface ListaPagarProps {
-  registros: Registro[]
+  pagamentos: Pagamento[]
   selecionado: number | null
-  onSelecionar: (r: Registro | null) => void
+  onSelecionar: (r: Pagamento | null) => void
 }
 
 export interface ListaReceberProps {
-  registros: Registro[]
+  recebimentos: Pagamento[]
   selecionado: number | null
-  onSelecionar: (r: Registro | null) => void
+  onSelecionar: (r: Pagamento | null) => void
 }
 
 export interface ModalConfirmarProps {
@@ -75,7 +75,7 @@ export interface ModalConfirmarProps {
 export interface ModalFormProps {
   titulo: string
   periodo: string
-  inicial?: Registro
+  inicial?: Pagamento
   onConfirmar: (dados: {
     tipo: string
     descricao: string

@@ -15,7 +15,7 @@ pub fn criar_plano(
 ) -> Result<i64, String> {
     let conn = state.0.lock().map_err(|e| e.to_string())?;
     conn.execute(
-        "INSERT INTO planos_futuros (descricao, periodo, duracao_valor, duracao_unidade, valor, status)
+        "INSERT INTO projetos_futuros (descricao, periodo, duracao_valor, duracao_unidade, valor, status)
          VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
         params![descricao, periodo, duracao_valor, duracao_unidade, valor, status],
     ).map_err(|e| e.to_string())?;
@@ -28,7 +28,7 @@ pub fn listar_planos(state: State<DbState>) -> Result<Vec<PlanoFuturo>, String> 
     let mut stmt = conn
         .prepare(
             "SELECT id, descricao, periodo, duracao_valor, duracao_unidade, valor, status, criado_em, alterado_em
-             FROM planos_futuros ORDER BY criado_em DESC",
+             FROM projetos_futuros ORDER BY criado_em DESC",
         )
         .map_err(|e| e.to_string())?;
 
@@ -66,7 +66,7 @@ pub fn alterar_plano(
 ) -> Result<(), String> {
     let conn = state.0.lock().map_err(|e| e.to_string())?;
     conn.execute(
-        "UPDATE planos_futuros
+        "UPDATE projetos_futuros
          SET descricao = ?1, periodo = ?2, duracao_valor = ?3, duracao_unidade = ?4,
              valor = ?5, status = ?6, alterado_em = datetime('now')
          WHERE id = ?7",
@@ -87,7 +87,7 @@ pub fn alterar_plano(
 #[tauri::command]
 pub fn apagar_plano(state: State<DbState>, id: i64) -> Result<(), String> {
     let conn = state.0.lock().map_err(|e| e.to_string())?;
-    conn.execute("DELETE FROM planos_futuros WHERE id = ?1", params![id])
+    conn.execute("DELETE FROM projetos_futuros WHERE id = ?1", params![id])
         .map_err(|e| e.to_string())?;
     Ok(())
 }

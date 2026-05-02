@@ -1,9 +1,9 @@
-import { Fragment } from 'react'
 import { ListaReceberProps } from '../../../types'
-import { formatarMoeda } from '../../../utils/formatters'
 import { StatusPagamento } from '../global/StatusPagamento'
+import { formatarMoeda } from '../../../utils/formatters'
+import { Fragment } from 'react'
 
-export function ListaReceber({ registros, selecionado, onSelecionar }: ListaReceberProps) {
+export function ListaReceber({ recebimentos, selecionado, onSelecionar }: ListaReceberProps) {
   return (
     <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-300 dark:border-slate-700 shadow-sm flex flex-col transition-colors overflow-hidden">
       <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-slate-700">
@@ -12,11 +12,11 @@ export function ListaReceber({ registros, selecionado, onSelecionar }: ListaRece
           <h2 className="font-bold text-[#1C2B3A] dark:text-white">A Receber</h2>
         </div>
         <span className="text-xs text-gray-800 dark:text-slate-300">
-          {registros.length} {registros.length === 1 ? 'Registro' : 'Registros'}
+          {recebimentos.length} {recebimentos.length === 1 ? 'Registro' : 'registros'}
         </span>
       </div>
       <div className="flex-1 overflow-y-auto">
-        {registros.length === 0 ? (
+        {recebimentos.length === 0 ? (
           <p className="text-sm text-gray-800 dark:text-slate-100 text-center py-10">Nenhum registro neste período.</p>
         ) : (
           <table className="w-full text-sm">
@@ -30,7 +30,7 @@ export function ListaReceber({ registros, selecionado, onSelecionar }: ListaRece
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-slate-700">
-              {registros.map(r => (
+              {recebimentos.map(r => (
                 <Fragment key={r.id}>
                   <tr
                     onClick={() => onSelecionar(selecionado === r.id ? null : r)}

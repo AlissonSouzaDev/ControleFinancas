@@ -15,7 +15,7 @@ pub fn criar_registro(
 ) -> Result<i64, String> {
     let conn = state.0.lock().map_err(|e| e.to_string())?;
     conn.execute(
-        "INSERT INTO dados_mensais (periodo, tipo, descricao, data_vencimento, valor_total, valor_realizado)
+        "INSERT INTO orcamento_mensal (periodo, tipo, descricao, data_vencimento, valor_total, valor_realizado)
          VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
         params![periodo, tipo, descricao, data_vencimento, valor_total, valor_realizado.unwrap_or(0.0)],
     ).map_err(|e| e.to_string())?;
@@ -29,7 +29,7 @@ pub fn listar_registros(state: State<DbState>, periodo: String) -> Result<Vec<Re
         .prepare(
             "SELECT id, periodo, tipo, descricao, data_vencimento, valor_total, valor_realizado, prioridade,
                     status_pagamento, observacao, criado_em, alterado_em
-             FROM dados_mensais WHERE periodo = ?1 ORDER BY tipo, criado_em",
+             FROM orcamento_mensal WHERE periodo = ?1 ORDER BY tipo, criado_em",
         )
         .map_err(|e| e.to_string())?;
 
@@ -68,7 +68,7 @@ pub fn alterar_registro(
 ) -> Result<(), String> {
     let conn = state.0.lock().map_err(|e| e.to_string())?;
     conn.execute(
-        "UPDATE dados_mensais
+        "UPDATE orcamento_mensal
          SET tipo = ?1, descricao = ?2, data_vencimento = ?3, valor_total = ?4, valor_realizado = ?5,
              alterado_em = datetime('now')
          WHERE id = ?6",
@@ -80,7 +80,7 @@ pub fn alterar_registro(
 #[tauri::command]
 pub fn apagar_registro(state: State<DbState>, id: i64) -> Result<(), String> {
     let conn = state.0.lock().map_err(|e| e.to_string())?;
-    conn.execute("DELETE FROM dados_mensais WHERE id = ?1", params![id])
+    conn.execute("DELETE FROM orcamento_mensal WHERE id = ?1", params![id])
         .map_err(|e| e.to_string())?;
     Ok(())
 }
@@ -88,7 +88,7 @@ pub fn apagar_registro(state: State<DbState>, id: i64) -> Result<(), String> {
 #[tauri::command]
 pub fn apagar_todos_mes(state: State<DbState>, periodo: String) -> Result<(), String> {
     let conn = state.0.lock().map_err(|e| e.to_string())?;
-    conn.execute("DELETE FROM dados_mensais WHERE periodo = ?1", params![periodo])
+    conn.execute("DELETE FROM orcamento_mensal WHERE periodo = ?1", params![periodo])
         .map_err(|e| e.to_string())?;
     Ok(())
 }
@@ -103,7 +103,7 @@ pub fn alterar_status(
 ) -> Result<(), String> {
     let conn = state.0.lock().map_err(|e| e.to_string())?;
     conn.execute(
-        "UPDATE dados_mensais
+        "UPDATE orcamento_mensal
          SET status_pagamento = ?1, valor_realizado = ?2, observacao = ?3, alterado_em = datetime('now')
          WHERE id = ?4",
         params![status_pagamento, valor_realizado.unwrap_or(0.0), observacao, id],
@@ -115,7 +115,7 @@ pub fn alterar_status(
 pub fn alterar_prioridade(state: State<DbState>, id: i64, prioridade: bool) -> Result<(), String> {
     let conn = state.0.lock().map_err(|e| e.to_string())?;
     conn.execute(
-        "UPDATE dados_mensais SET prioridade = ?1, alterado_em = datetime('now') WHERE id = ?2",
+        "UPDATE orcamento_mensal SET prioridade = ?1, alterado_em = datetime('now') WHERE id = ?2",
         params![prioridade, id],
     ).map_err(|e| e.to_string())?;
     Ok(())
@@ -127,7 +127,7 @@ pub fn buscar_totais(state: State<DbState>, periodo: String) -> Result<Totais, S
 
     let total_pagar: f64 = conn
         .query_row(
-            "SELECT COALESCE(SUM(valor_total), 0) FROM dados_mensais WHERE periodo = ?1 AND tipo = 'a_pagar'",
+            "SELECT COALESCE(SUM(valor_total), 0) FROM orcamento_mensal WHERE periodo = ?1 AND tipo = 'a_pagar'",
             params![periodo],
             |row| row.get(0),
         )
@@ -135,7 +135,7 @@ pub fn buscar_totais(state: State<DbState>, periodo: String) -> Result<Totais, S
 
     let total_receber: f64 = conn
         .query_row(
-            "SELECT COALESCE(SUM(valor_total), 0) FROM dados_mensais WHERE periodo = ?1 AND tipo = 'a_receber'",
+            "SELECT COALESCE(SUM(valor_total), 0) FROM orcamento_mensal WHERE periodo = ?1 AND tipo = 'a_receber'",
             params![periodo],
             |row| row.get(0),
         )
