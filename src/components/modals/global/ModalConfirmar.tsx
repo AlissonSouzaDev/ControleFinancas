@@ -1,20 +1,17 @@
 import { ModalConfirmarProps } from '../../../types'
 import { useState } from 'react'
 import { Overlay } from '../../ui/global/Overlay'
-import { Trash2, Star } from 'lucide-react'
 
 const variantes = {
   danger: {
     iconeBg: 'bg-red-100 dark:bg-red-900/30',
-    iconeColor: 'text-red-500',
-    Icone: Trash2,
+    icone: '/icons/trash.svg',
     botaoClass: 'bg-red-500 hover:bg-red-600 text-white',
     textoPadrao: 'Apagar',
   },
   warning: {
     iconeBg: 'bg-yellow-100 dark:bg-yellow-900/30',
-    iconeColor: 'text-yellow-500',
-    Icone: Star,
+    icone: '/icons/star_yellow.svg',
     botaoClass: 'bg-yellow-600 hover:bg-yellow-500 text-white',
     textoPadrao: 'Confirmar',
   },
@@ -38,7 +35,7 @@ export function ModalConfirmar({ titulo, mensagem, variante = 'danger', textoBot
       <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-sm p-6 text-center transition-colors">
         <div className="flex justify-center mb-4">
           <div className={`${v.iconeBg} p-3 rounded-full`}>
-            <v.Icone size={24} className={v.iconeColor} />
+            <img src={v.icone} className="w-6 h-6" />
           </div>
         </div>
         <h2 className="text-lg font-bold text-[#1C2B3A] dark:text-white mb-2">{titulo}</h2>

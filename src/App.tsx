@@ -1,9 +1,9 @@
 import { useState, useLayoutEffect } from 'react'
 import { HashRouter, Routes, Route } from 'react-router-dom'
-import { Header } from './components/Header'
-import { Sidebar } from './components/Sidebar'
-import { VisaoGeral } from './pages/VisaoGeral'
+import { OrcamentoMensal } from './pages/OrcamentoMensal'
 import { PlanosFuturos } from './pages/PlanosFuturos'
+import { Sidebar } from './components/Sidebar'
+import { Header } from './components/Header'
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('tema') === 'dark')
@@ -26,7 +26,7 @@ function App() {
         <Sidebar aberta={menuAberto} onFechar={() => setMenuAberto(false)} />
 
         <Routes>
-          <Route path="/" element={<VisaoGeral />} />
+          <Route path="/" element={<OrcamentoMensal />} />
           <Route path="/planos-futuros" element={<PlanosFuturos />} />
         </Routes>
       </div>

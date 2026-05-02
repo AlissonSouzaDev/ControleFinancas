@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Overlay } from '../../ui/global/Overlay'
 import { useForm } from 'react-hook-form'
 import { Campo } from '../../ui/global/Campo'
-import { z } from 'zod'
+import { schemaAlterarStatus, AlterarStatusFormData as FormData } from '../../../schemas/registros'
 
 const inputClass = "w-full border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-slate-700 text-[#1C2B3A] dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#1C2B3A] dark:focus:ring-slate-400 placeholder:text-gray-400 dark:placeholder:text-slate-500"
 const errorClass = "text-xs text-red-500 mt-0.5"
@@ -13,25 +13,13 @@ export function ModalAlterarStatus({ registro, onConfirmar, onCancelar }: ModalA
   const isPagar = registro.tipo === 'a_pagar'
   const labelRealizado = isPagar ? 'Valor Pago (R$)' : 'Valor Recebido (R$)'
 
-  const schema = useMemo(() => z.object({
-    status_pagamento: z.enum(['pendente', 'parcial', 'quitado']),
-    valor_realizado: z.number().min(0, 'Não pode ser negativo').optional(),
-    observacao: z.string().optional(),
-  }).refine(
-    data => {
-      if (data.valor_realizado === undefined || isNaN(data.valor_realizado)) return true
-      return data.valor_realizado <= registro.valor_total
-    },
-    { message: 'Não pode ser maior que o Valor Total', path: ['valor_realizado'] }
-  ), [registro.valor_total])
-
-  type FormData = z.infer<typeof schema>
+  const schema = useMemo(() => schemaAlterarStatus(registro.valor_total), [registro.valor_total])
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
       status_pagamento: registro.status_pagamento,
-      valor_realizado: registro.valor_realizado > 0 ? registro.valor_realizado : ('' as unknown as number),
+      valor_realizado: registro.valor_realizado ?? 0,
       observacao: registro.observacao ?? '',
     },
   })
@@ -39,7 +27,7 @@ export function ModalAlterarStatus({ registro, onConfirmar, onCancelar }: ModalA
   async function onSubmit(data: FormData) {
     await onConfirmar({
       status_pagamento: data.status_pagamento,
-      valor_realizado: data.valor_realizado !== undefined && !isNaN(data.valor_realizado) ? data.valor_realizado : null,
+      valor_realizado: data.valor_realizado > 0 ? data.valor_realizado : null,
       observacao: data.observacao?.trim() || null,
     })
   }
@@ -63,7 +51,7 @@ export function ModalAlterarStatus({ registro, onConfirmar, onCancelar }: ModalA
 
           <Campo label={labelRealizado}>
             <input
-              {...register('valor_realizado', { valueAsNumber: true })}
+              {...register('valor_realizado', { setValueAs: v => v === '' || isNaN(Number(v)) ? 0 : Number(v) })}
               type="number"
               step="0.01"
               min="0"

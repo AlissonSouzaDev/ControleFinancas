@@ -19,7 +19,7 @@ export interface Totais {
   diferenca: number
 }
 
-export type ModalVisaoGeral = 'criar' | 'alterar' | 'alterar_status' | 'alterar_prioridade' | 'apagar' | 'apagar_todos' | null
+export type ModalOrcamentoMensal = 'criar' | 'alterar' | 'alterar_status' | 'alterar_prioridade' | 'apagar' | 'apagar_todos' | null
 
 export interface PeriodoNavProps {
   periodo: string
