@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
 import { PlanoFuturo, ModalPlanos } from '../types'
-import { Plus, Pencil, Trash2 } from 'lucide-react'
 import { ModalConfirmar } from '../components/modals/global/ModalConfirmar'
 import { ListaPlanos } from '../components/ui/planosFuturos/ListaPlanos'
 import { ModalForm } from '../components/modals/planosFuturos/ModalForm'
@@ -32,21 +31,22 @@ export function PlanosFuturos() {
           onClick={() => { setSelecionado(null); setModal('criar') }}
           className="flex items-center gap-2 bg-[#00355f] dark:bg-[#0f2d7e] border border-gray-300 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-colors"
         >
-          <Plus size={15} /> Criar registro
+          <img src="/icons/plus.svg" className="w-[15px] h-[15px]" /> Criar registro
         </button>
         <button
           disabled={!selecionado}
           onClick={() => selecionado && setModal('alterar')}
           className="flex items-center gap-2 bg-[#dce9ff] dark:bg-slate-700 dark:text-slate-200 border border-gray-300 dark:border-slate-600 text-[#00355f] text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          <Pencil size={15} /> Alterar registro
+          <img src="/icons/pencil_blue.svg" className="w-[15px] h-[15px] dark:hidden" />
+          <img src="/icons/pencil_gray.svg" className="w-[15px] h-[15px] hidden dark:block" /> Alterar registro
         </button>
         <button
           disabled={!selecionado}
           onClick={() => selecionado && setModal('apagar')}
           className="flex items-center gap-2 bg-white dark:bg-slate-800 border border-red-400 text-red-600 text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          <Trash2 size={15} /> Apagar registro
+          <img src="/icons/trash.svg" className="w-[15px] h-[15px]" /> Apagar registro
         </button>
       </div>
 

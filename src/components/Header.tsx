@@ -1,4 +1,3 @@
-import { Sun, Moon, Menu } from 'lucide-react'
 import { HeaderProps } from '../types'
 
 export function Header({ darkMode, onToggleDark, onToggleMenu }: HeaderProps) {
@@ -8,16 +7,16 @@ export function Header({ darkMode, onToggleDark, onToggleMenu }: HeaderProps) {
         <p className="text-white font-bold text-sm tracking-wide">Controle Financeiro</p>
         <button
           onClick={onToggleMenu}
-          className="text-gray-400 hover:text-white transition-colors p-1"
+          className="transition-colors p-1"
         >
-          <Menu size={18} />
+          <img src="/icons/menu.svg" className="w-[18px] h-[18px]" />
         </button>
       </div>
       <button
         onClick={onToggleDark}
         className="text-white transition-colors p-2 border border-white rounded-xl"
       >
-        {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+        {darkMode ? <img src="/icons/sun.svg" className="w-[18px] h-[18px]" /> : <img src="/icons/moon.svg" className="w-[18px] h-[18px]" />}
       </button>
     </header>
   )

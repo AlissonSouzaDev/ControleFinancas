@@ -1,40 +1,22 @@
+import { schemaRegistroForm, RegistroFormData as FormData } from '../../../schemas/registros'
+import { useForm, useWatch } from 'react-hook-form'
 import { ModalFormProps } from '../../../types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Overlay } from '../../ui/global/Overlay'
-import { useForm, useWatch } from 'react-hook-form'
 import { Campo } from '../../ui/global/Campo'
-import { z } from 'zod'
-
-const schema = z.object({
-  tipo: z.enum(['a_pagar', 'a_receber']),
-  descricao: z.string().min(1, 'Campo Descrição é obrigatório'),
-  data_vencimento: z.string().min(1, 'Campo Data de Vencimento é obrigatório'),
-  valor_total: z
-    .number({ error: 'Informe um valor' })
-    .positive('O valor deve ser maior que zero'),
-  valor_realizado: z.number().min(0, 'Não pode ser negativo').optional(),
-}).refine(
-  data => {
-    if (data.valor_realizado === undefined || isNaN(data.valor_realizado)) return true
-    return data.valor_realizado <= data.valor_total
-  },
-  { message: 'Não pode ser maior que o Valor Total', path: ['valor_realizado'] }
-)
-
-type FormData = z.infer<typeof schema>
 
 const inputClass = "w-full border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-slate-700 text-[#1C2B3A] dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#1C2B3A] dark:focus:ring-slate-400 placeholder:text-gray-400 dark:placeholder:text-slate-500"
 const errorClass = "text-xs text-red-500 mt-0.5"
 
 export function ModalForm({ titulo, periodo, inicial, onConfirmar, onCancelar }: ModalFormProps) {
   const { register, handleSubmit, control, formState: { errors, isSubmitting } } = useForm<FormData>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schemaRegistroForm),
     defaultValues: {
       tipo: inicial?.tipo ?? 'a_pagar',
       descricao: inicial?.descricao ?? '',
       data_vencimento: inicial?.data_vencimento ?? `${periodo}-01`,
       valor_total: inicial?.valor_total ?? ('' as unknown as number),
-      valor_realizado: inicial && inicial.valor_realizado > 0 ? inicial.valor_realizado : ('' as unknown as number),
+      valor_realizado: inicial?.valor_realizado ?? 0,
     },
   })
 
@@ -47,7 +29,7 @@ export function ModalForm({ titulo, periodo, inicial, onConfirmar, onCancelar }:
       descricao: data.descricao,
       data_vencimento: data.data_vencimento,
       valor_total: data.valor_total,
-      valor_realizado: data.valor_realizado !== undefined && !isNaN(data.valor_realizado) ? data.valor_realizado : null,
+      valor_realizado: data.valor_realizado > 0 ? data.valor_realizado : null,
     })
   }
 
@@ -103,7 +85,7 @@ export function ModalForm({ titulo, periodo, inicial, onConfirmar, onCancelar }:
           </Campo>
           <Campo label={labelRealizado}>
             <input
-              {...register('valor_realizado', { valueAsNumber: true })}
+              {...register('valor_realizado', { setValueAs: v => v === '' || isNaN(Number(v)) ? 0 : Number(v) })}
               type="number"
               step="0.01"
               min="0"

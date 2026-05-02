@@ -1,10 +1,9 @@
-import { LayoutDashboard, CalendarClock } from 'lucide-react'
 import { SidebarProps } from '../types'
 import { NavLink } from 'react-router-dom'
 
 const itens = [
-  { to: '/', label: 'Visão Geral', icon: LayoutDashboard },
-  { to: '/planos-futuros', label: 'Planos Futuros', icon: CalendarClock },
+  { to: '/', label: 'Orçamento Mensal', icon: '/icons/dashboard.svg' },
+  { to: '/planos-futuros', label: 'Planos Futuros', icon: '/icons/calendar_clock.svg' },
 ]
 
 export function Sidebar({ aberta, onFechar }: SidebarProps) {
@@ -27,7 +26,7 @@ export function Sidebar({ aberta, onFechar }: SidebarProps) {
         `}
       >
         <nav className="flex flex-col gap-1 px-3 mt-4">
-          {itens.map(({ to, label, icon: Icon }) => (
+          {itens.map(({ to, label, icon }) => (
             <NavLink
               key={to}
               to={to}
@@ -41,7 +40,7 @@ export function Sidebar({ aberta, onFechar }: SidebarProps) {
                 }`
               }
             >
-              <Icon size={17} />
+              <img src={icon} className="w-[17px] h-[17px]" />
               {label}
             </NavLink>
           ))}

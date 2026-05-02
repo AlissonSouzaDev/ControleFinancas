@@ -1,22 +1,22 @@
 import { periodoAtual, navegarPeriodo, periodoLabel } from '../utils/formatters'
-import { Registro, Totais, ModalVisaoGeral } from '../types'
+import { Registro, Totais, ModalOrcamentoMensal } from '../types'
 import { useState, useEffect, useCallback } from 'react'
-import { ModalAlterarStatus } from '../components/modals/visaoGeral/ModalAlterarStatus'
+import { ModalAlterarStatus } from '../components/modals/orcamentoMensal/ModalAlterarStatus'
 import { ModalConfirmar } from '../components/modals/global/ModalConfirmar'
-import { ListaReceber } from '../components/ui/visaoGeral/ListaReceber'
-import { CardsResumo } from '../components/ui/visaoGeral/CardsResumo'
-import { PeriodoNav } from '../components/ui/visaoGeral/PeriodoNav'
-import { ListaPagar } from '../components/ui/visaoGeral/ListaPagar'
-import { ModalForm } from '../components/modals/visaoGeral/ModalForm'
-import { AcoesBar } from '../components/ui/visaoGeral/AcoesBar'
+import { ListaReceber } from '../components/ui/orcamentoMensal/ListaReceber'
+import { CardsResumo } from '../components/ui/orcamentoMensal/CardsResumo'
+import { PeriodoNav } from '../components/ui/orcamentoMensal/PeriodoNav'
+import { ListaPagar } from '../components/ui/orcamentoMensal/ListaPagar'
+import { ModalForm } from '../components/modals/orcamentoMensal/ModalForm'
+import { AcoesBar } from '../components/ui/orcamentoMensal/AcoesBar'
 import { invoke } from '@tauri-apps/api/core'
 
-export function VisaoGeral() {
+export function OrcamentoMensal() {
   const [periodo, setPeriodo] = useState(periodoAtual)
   const [registros, setRegistros] = useState<Registro[]>([])
   const [totais, setTotais] = useState<Totais>({ total_pagar: 0, total_receber: 0, diferenca: 0 })
   const [selecionado, setSelecionado] = useState<Registro | null>(null)
-  const [modal, setModal] = useState<ModalVisaoGeral>(null)
+  const [modal, setModal] = useState<ModalOrcamentoMensal>(null)
 
   const carregar = useCallback(async () => {
     const [regs, tots] = await Promise.all([

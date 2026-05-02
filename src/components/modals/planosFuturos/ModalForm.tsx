@@ -4,37 +4,7 @@ import { useEffect } from 'react'
 import { Overlay } from '../../ui/global/Overlay'
 import { useForm } from 'react-hook-form'
 import { Campo } from '../../ui/global/Campo'
-import { z } from 'zod'
-
-const schema = z.object({
-  descricao: z.string().min(1, 'Descrição é obrigatória'),
-  status: z.enum(['ideia', 'planejando', 'em andamento', 'concluído']),
-  periodo: z
-    .string()
-    .regex(/^\d{2}\/\d{4}$/, 'Formato inválido — use mm/aaaa')
-    .optional()
-    .or(z.literal('')),
-  duracao_valor: z
-    .string()
-    .regex(/^\d+$/, 'Informe apenas números inteiros')
-    .optional()
-    .or(z.literal('')),
-  duracao_unidade: z.enum(['dias', 'semanas', 'meses', 'anos']).optional().or(z.literal('')),
-  valor: z
-    .string()
-    .regex(/^\d+([.,]\d{1,2})?$/, 'Informe um valor válido')
-    .optional()
-    .or(z.literal('')),
-}).refine(
-  data => {
-    const temValor = !!data.duracao_valor
-    const temUnidade = !!data.duracao_unidade
-    return temValor === temUnidade
-  },
-  { message: 'Preencha tanto a duração quanto a unidade', path: ['duracao_unidade'] }
-)
-
-type FormData = z.infer<typeof schema>
+import { schemaPlanoForm, PlanoFormData as FormData } from '../../../schemas/planos'
 
 const inputClass = "w-full border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-slate-700 text-[#1C2B3A] dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#1C2B3A] dark:focus:ring-slate-400 placeholder:text-gray-400 dark:placeholder:text-slate-500"
 const errorClass = "text-xs text-red-500 mt-0.5"
@@ -46,7 +16,7 @@ export function ModalForm({ titulo, inicial, onConfirmar, onCancelar }: ModalFor
     formState: { errors, isSubmitting },
     reset,
   } = useForm<FormData>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schemaPlanoForm),
     defaultValues: {
       descricao: inicial?.descricao ?? '',
       status: inicial?.status ?? 'ideia',

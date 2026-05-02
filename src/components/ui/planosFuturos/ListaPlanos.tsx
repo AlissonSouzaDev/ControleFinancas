@@ -1,6 +1,5 @@
 import { PlanoFuturo, ListaPlanosProps } from '../../../types'
 import { formatarMoeda } from '../../../utils/formatters'
-import { Lightbulb } from 'lucide-react'
 
 const statusCor: Record<PlanoFuturo['status'], string> = {
   'ideia': 'bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-slate-300',
@@ -42,7 +41,7 @@ export function ListaPlanos({ planos, selecionado, onSelecionar }: ListaPlanosPr
               }`}
           >
             <div className="bg-blue-50 dark:bg-blue-900/30 p-2 rounded-full flex-shrink-0">
-              <Lightbulb size={18} className="text-blue-500" strokeWidth={2} />
+              <img src="/icons/lightbulb.svg" className="w-[18px] h-[18px]" />
             </div>
 
             <div className="flex-1 min-w-0">
