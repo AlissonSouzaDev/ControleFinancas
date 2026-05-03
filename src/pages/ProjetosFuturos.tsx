@@ -3,6 +3,7 @@ import { ProjetoFuturo, ModalProjetos } from '../types'
 import { ModalConfirmar } from '../components/modals/global/ModalConfirmar'
 import { ListaProjetos } from '../components/ui/projetosFuturos/ListaProjetos'
 import { ModalForm } from '../components/modals/projetosFuturos/ModalForm'
+import { ModalAlterarPrioridade } from '../components/modals/projetosFuturos/ModalAlterarPrioridade'
 import { invoke } from '@tauri-apps/api/core'
 
 export function ProjetosFuturos() {
@@ -43,6 +44,14 @@ export function ProjetosFuturos() {
         </button>
         <button
           disabled={!selecionado}
+          onClick={() => selecionado && setModal('alterar_prioridade')}
+          className="flex items-center gap-2 bg-[#dce9ff] dark:bg-slate-700 dark:text-slate-200 border border-gray-300 dark:border-slate-600 text-[#00355f] text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          <img src="/icons/star_blue.svg" className="w-[15px] h-[15px] dark:hidden" />
+          <img src="/icons/star_gray.svg" className="w-[15px] h-[15px] hidden dark:block" /> Alterar Prioridade
+        </button>
+        <button
+          disabled={!selecionado}
           onClick={() => selecionado && setModal('apagar')}
           className="flex items-center gap-2 bg-white dark:bg-slate-800 border border-red-400 text-red-600 text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
@@ -68,6 +77,7 @@ export function ProjetosFuturos() {
                 duracaoValor: dados.duracao_valor,
                 duracaoUnidade: dados.duracao_unidade,
                 valor: dados.valor,
+                observacao: dados.observacao,
               })
               await carregar()
               fecharModal()
@@ -93,6 +103,7 @@ export function ProjetosFuturos() {
                 duracaoValor: dados.duracao_valor,
                 duracaoUnidade: dados.duracao_unidade,
                 valor: dados.valor,
+                observacao: dados.observacao,
               })
               await carregar()
               setSelecionado(null)
@@ -100,6 +111,19 @@ export function ProjetosFuturos() {
             } catch (e) {
               console.error('alterar_projeto:', e)
             }
+          }}
+          onCancelar={fecharModal}
+        />
+      )}
+
+      {modal === 'alterar_prioridade' && selecionado && (
+        <ModalAlterarPrioridade
+          projeto={selecionado}
+          onConfirmar={async (prioridade) => {
+            await invoke('alterar_prioridade_projeto', { id: selecionado.id, prioridade })
+            await carregar()
+            setSelecionado(null)
+            fecharModal()
           }}
           onCancelar={fecharModal}
         />

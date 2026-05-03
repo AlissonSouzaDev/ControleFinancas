@@ -9,6 +9,8 @@ pub struct ProjetoFuturo {
     pub duracao_unidade: Option<String>,
     pub valor: Option<f64>,
     pub status: String,
+    pub prioridade: i64,
+    pub observacao: Option<String>,
     pub criado_em: String,
     pub alterado_em: String,
 }
