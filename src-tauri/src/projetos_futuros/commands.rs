@@ -1,10 +1,10 @@
-use super::model::PlanoFuturo;
+use super::model::ProjetoFuturo;
 use crate::db::DbState;
 use rusqlite::params;
 use tauri::State;
 
 #[tauri::command]
-pub fn criar_plano(
+pub fn criar_projeto(
     state: State<DbState>,
     descricao: String,
     periodo: Option<String>,
@@ -23,7 +23,7 @@ pub fn criar_plano(
 }
 
 #[tauri::command]
-pub fn listar_planos(state: State<DbState>) -> Result<Vec<PlanoFuturo>, String> {
+pub fn listar_projetos(state: State<DbState>) -> Result<Vec<ProjetoFuturo>, String> {
     let conn = state.0.lock().map_err(|e| e.to_string())?;
     let mut stmt = conn
         .prepare(
@@ -32,9 +32,9 @@ pub fn listar_planos(state: State<DbState>) -> Result<Vec<PlanoFuturo>, String> 
         )
         .map_err(|e| e.to_string())?;
 
-    let planos = stmt
+    let projetos = stmt
         .query_map([], |row| {
-            Ok(PlanoFuturo {
+            Ok(ProjetoFuturo {
                 id: row.get(0)?,
                 descricao: row.get(1)?,
                 periodo: row.get(2)?,
@@ -50,11 +50,11 @@ pub fn listar_planos(state: State<DbState>) -> Result<Vec<PlanoFuturo>, String> 
         .collect::<Result<Vec<_>, _>>()
         .map_err(|e| e.to_string())?;
 
-    Ok(planos)
+    Ok(projetos)
 }
 
 #[tauri::command]
-pub fn alterar_plano(
+pub fn alterar_projeto(
     state: State<DbState>,
     id: i64,
     descricao: String,
@@ -70,22 +70,14 @@ pub fn alterar_plano(
          SET descricao = ?1, periodo = ?2, duracao_valor = ?3, duracao_unidade = ?4,
              valor = ?5, status = ?6, alterado_em = datetime('now')
          WHERE id = ?7",
-        params![
-            descricao,
-            periodo,
-            duracao_valor,
-            duracao_unidade,
-            valor,
-            status,
-            id
-        ],
+        params![descricao, periodo, duracao_valor, duracao_unidade, valor, status, id],
     )
     .map_err(|e| e.to_string())?;
     Ok(())
 }
 
 #[tauri::command]
-pub fn apagar_plano(state: State<DbState>, id: i64) -> Result<(), String> {
+pub fn apagar_projeto(state: State<DbState>, id: i64) -> Result<(), String> {
     let conn = state.0.lock().map_err(|e| e.to_string())?;
     conn.execute("DELETE FROM projetos_futuros WHERE id = ?1", params![id])
         .map_err(|e| e.to_string())?;

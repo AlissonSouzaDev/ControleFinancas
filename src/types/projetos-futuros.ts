@@ -27,7 +27,7 @@ export interface ListaProjetosProps {
   onSelecionar: (p: ProjetoFuturo | null) => void
 }
 
-export interface ModalFormPlanoProps {
+export interface ModalFormProjetoProps {
   titulo: string
   inicial?: ProjetoFuturo
   onConfirmar: (dados: DadosProjeto) => Promise<void>

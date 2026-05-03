@@ -58,10 +58,10 @@ export function ProjetosFuturos() {
 
       {modal === 'criar' && (
         <ModalForm
-          titulo="Criar Plano"
+          titulo="Criar Projeto"
           onConfirmar={async (dados) => {
             try {
-              await invoke('criar_plano', {
+              await invoke('criar_projeto', {
                 descricao: dados.descricao,
                 status: dados.status,
                 periodo: dados.periodo,
@@ -72,7 +72,7 @@ export function ProjetosFuturos() {
               await carregar()
               fecharModal()
             } catch (e) {
-              console.error('criar_plano:', e)
+              console.error('criar_projeto:', e)
             }
           }}
           onCancelar={fecharModal}
@@ -81,11 +81,11 @@ export function ProjetosFuturos() {
 
       {modal === 'alterar' && selecionado && (
         <ModalForm
-          titulo="Alterar Plano"
+          titulo="Alterar Projeto"
           inicial={selecionado}
           onConfirmar={async (dados) => {
             try {
-              await invoke('alterar_plano', {
+              await invoke('alterar_projeto', {
                 id: selecionado.id,
                 descricao: dados.descricao,
                 status: dados.status,
@@ -98,7 +98,7 @@ export function ProjetosFuturos() {
               setSelecionado(null)
               fecharModal()
             } catch (e) {
-              console.error('alterar_plano:', e)
+              console.error('alterar_projeto:', e)
             }
           }}
           onCancelar={fecharModal}
@@ -107,10 +107,10 @@ export function ProjetosFuturos() {
 
       {modal === 'apagar' && selecionado && (
         <ModalConfirmar
-          titulo="Apagar Plano"
-          mensagem="Deseja mesmo apagar este plano? Esta ação é permanente e não poderá ser desfeita."
+          titulo="Apagar Projeto"
+          mensagem="Deseja mesmo apagar este projeto? Esta ação é permanente e não poderá ser desfeita."
           onConfirmar={async () => {
-            await invoke('apagar_plano', { id: selecionado.id })
+            await invoke('apagar_projeto', { id: selecionado.id })
             await carregar()
             setSelecionado(null)
             fecharModal()

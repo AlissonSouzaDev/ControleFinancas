@@ -22,13 +22,13 @@ export function ListaProjetos({ projetos, selecionado, onSelecionar }: ListaProj
           <h2 className="font-bold text-[#1C2B3A] dark:text-white">Lista de projetos</h2>
         </div>
         <span className="text-xs text-gray-800 dark:text-slate-300">
-          {projetos.length} {projetos.length === 1 ? 'Plano' : 'projetos'}
+          {projetos.length} {projetos.length === 1 ? 'Projeto' : 'projetos'}
         </span>
       </div>
 
       <div className="flex-1 overflow-y-auto divide-y divide-gray-50 dark:divide-slate-700">
         {projetos.length === 0 && (
-          <p className="text-sm text-gray-800 dark:text-slate-300 text-center py-10">Nenhum plano registrado.</p>
+          <p className="text-sm text-gray-800 dark:text-slate-300 text-center py-10">Nenhum projeto registrado.</p>
         )}
         {projetos.map(p => (
           <div

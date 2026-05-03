@@ -1,7 +1,7 @@
 mod db;
 mod migrations;
 mod orcamento_mensal;
-mod planos_futuros;
+mod projetos_futuros;
 
 pub use db::DbState;
 
@@ -30,10 +30,10 @@ pub fn run() {
             orcamento_mensal::commands::alterar_status,
             orcamento_mensal::commands::alterar_prioridade,
             orcamento_mensal::commands::buscar_totais,
-            planos_futuros::commands::criar_plano,
-            planos_futuros::commands::listar_planos,
-            planos_futuros::commands::alterar_plano,
-            planos_futuros::commands::apagar_plano,
+            projetos_futuros::commands::criar_projeto,
+            projetos_futuros::commands::listar_projetos,
+            projetos_futuros::commands::alterar_projeto,
+            projetos_futuros::commands::apagar_projeto,
         ])
         .run(tauri::generate_context!())
         .expect("Erro ao executar aplicação Tauri");

@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
-pub struct PlanoFuturo {
+pub struct ProjetoFuturo {
     pub id: i64,
     pub descricao: String,
     pub periodo: Option<String>,
