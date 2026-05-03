@@ -33,6 +33,7 @@ pub fn run() {
             projetos_futuros::commands::criar_projeto,
             projetos_futuros::commands::listar_projetos,
             projetos_futuros::commands::alterar_projeto,
+            projetos_futuros::commands::alterar_prioridade_projeto,
             projetos_futuros::commands::apagar_projeto,
         ])
         .run(tauri::generate_context!())

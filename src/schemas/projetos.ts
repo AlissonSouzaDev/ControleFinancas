@@ -19,9 +19,16 @@ export const schemaProjetoForm = z.object({
     .regex(/^\d+([.,]\d{1,2})?$/, 'Informe um valor válido')
     .optional()
     .or(z.literal('')),
+  observacao: z.string().optional().or(z.literal('')),
 }).refine(
   data => !!data.duracao_valor === !!data.duracao_unidade,
   { message: 'Preencha tanto a duração quanto a unidade', path: ['duracao_unidade'] }
 )
 
 export type ProjetoFormData = z.infer<typeof schemaProjetoForm>
+
+export const schemaAlterarPrioridadeProjeto = z.object({
+  prioridade: z.number().int().min(1).max(5),
+})
+
+export type AlterarPrioridadeProjetoFormData = z.infer<typeof schemaAlterarPrioridadeProjeto>

@@ -73,6 +73,21 @@ pub fn init_db(conn: &Connection) {
         ").expect("Falha ao migrar colunas de valor e prioridade");
     }
 
+    let has_prioridade_projetos: bool = conn
+        .query_row(
+            "SELECT COUNT(*) FROM pragma_table_info('projetos_futuros') WHERE name = 'prioridade'",
+            [],
+            |row| row.get::<_, i64>(0),
+        )
+        .unwrap_or(0) > 0;
+
+    if !has_prioridade_projetos {
+        conn.execute_batch("
+            ALTER TABLE projetos_futuros ADD COLUMN prioridade INTEGER NOT NULL DEFAULT 1;
+            ALTER TABLE projetos_futuros ADD COLUMN observacao TEXT;
+        ").expect("Falha ao adicionar colunas prioridade e observacao em projetos_futuros");
+    }
+
     conn.execute_batch("
         CREATE TABLE IF NOT EXISTS orcamento_mensal (
             id                INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -99,6 +114,9 @@ pub fn init_db(conn: &Connection) {
             valor            REAL,
             status           TEXT    NOT NULL DEFAULT 'ideia'
                                      CHECK(status IN ('ideia','planejando','em andamento','concluído')),
+            prioridade       INTEGER NOT NULL DEFAULT 1
+                                     CHECK(prioridade BETWEEN 1 AND 5),
+            observacao       TEXT,
             criado_em        TEXT    NOT NULL DEFAULT (datetime('now')),
             alterado_em      TEXT    NOT NULL DEFAULT (datetime('now'))
         );

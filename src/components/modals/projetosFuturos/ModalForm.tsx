@@ -24,6 +24,7 @@ export function ModalForm({ titulo, inicial, onConfirmar, onCancelar }: ModalFor
       duracao_valor: inicial?.duracao_valor ?? '',
       duracao_unidade: inicial?.duracao_unidade ?? '',
       valor: inicial?.valor != null ? String(inicial.valor) : '',
+      observacao: inicial?.observacao ?? '',
     },
   })
 
@@ -36,6 +37,7 @@ export function ModalForm({ titulo, inicial, onConfirmar, onCancelar }: ModalFor
         duracao_valor: inicial.duracao_valor ?? '',
         duracao_unidade: inicial.duracao_unidade ?? '',
         valor: inicial.valor != null ? String(inicial.valor) : '',
+        observacao: inicial.observacao ?? '',
       })
     }
   }, [inicial, reset])
@@ -48,6 +50,7 @@ export function ModalForm({ titulo, inicial, onConfirmar, onCancelar }: ModalFor
       duracao_valor: data.duracao_valor || null,
       duracao_unidade: (data.duracao_unidade || null) as ProjetoFuturo['duracao_unidade'],
       valor: data.valor ? parseFloat(data.valor.replace(',', '.')) : null,
+      observacao: data.observacao || null,
     })
   }
 
@@ -124,6 +127,15 @@ export function ModalForm({ titulo, inicial, onConfirmar, onCancelar }: ModalFor
               className={inputClass}
             />
             {errors.valor && <p className={errorClass}>{errors.valor.message}</p>}
+          </Campo>
+
+          <Campo label="Observação (opcional)">
+            <textarea
+              {...register('observacao')}
+              rows={3}
+              placeholder="Alguma nota sobre este projeto..."
+              className={`${inputClass} resize-none`}
+            />
           </Campo>
 
           <div className="flex gap-3 pt-1">
