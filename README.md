@@ -78,7 +78,7 @@ As migrações de schema são aplicadas automaticamente e de forma condicional a
 ├── src-tauri/                  # Backend Rust + configuração Tauri
 │   └── src/
 │       ├── orcamento_mensal/   # Commands e model do orçamento mensal
-│       ├── planos_futuros/     # Commands e model dos projetos futuros
+│       ├── projetos_futuros/   # Commands e model dos projetos futuros
 │       └── migrations.rs       # Migrações do banco de dados
 └── public/
     └── icons/                  # Ícones SVG da interface
