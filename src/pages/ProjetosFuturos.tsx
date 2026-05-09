@@ -4,7 +4,7 @@ import { ModalConfirmar } from '../components/modals/global/ModalConfirmar'
 import { ListaProjetos } from '../components/ui/projetosFuturos/ListaProjetos'
 import { ModalForm } from '../components/modals/projetosFuturos/ModalForm'
 import { ModalAlterarPrioridade } from '../components/modals/projetosFuturos/ModalAlterarPrioridade'
-import { invoke } from '@tauri-apps/api/core'
+import { supabase } from '../lib/supabase'
 
 export function ProjetosFuturos() {
   const [projetos, setProjetos] = useState<ProjetoFuturo[]>([])
@@ -12,8 +12,13 @@ export function ProjetosFuturos() {
   const [modal, setModal] = useState<ModalProjetos>(null)
 
   const carregar = useCallback(async () => {
-    const lista = await invoke<ProjetoFuturo[]>('listar_projetos')
-    setProjetos(lista)
+    const { data, error } = await supabase
+      .from('projetos_futuros')
+      .select('*')
+      .order('prioridade', { ascending: false })
+      .order('criado_em', { ascending: false })
+    if (error) throw error
+    setProjetos((data ?? []) as ProjetoFuturo[])
   }, [])
 
   useEffect(() => { carregar() }, [carregar])
@@ -69,21 +74,18 @@ export function ProjetosFuturos() {
         <ModalForm
           titulo="Criar Projeto"
           onConfirmar={async (dados) => {
-            try {
-              await invoke('criar_projeto', {
-                descricao: dados.descricao,
-                status: dados.status,
-                periodo: dados.periodo,
-                duracaoValor: dados.duracao_valor,
-                duracaoUnidade: dados.duracao_unidade,
-                valor: dados.valor,
-                observacao: dados.observacao,
-              })
-              await carregar()
-              fecharModal()
-            } catch (e) {
-              console.error('criar_projeto:', e)
-            }
+            const { error } = await supabase.from('projetos_futuros').insert({
+              descricao: dados.descricao,
+              status: dados.status,
+              periodo: dados.periodo,
+              duracao_valor: dados.duracao_valor,
+              duracao_unidade: dados.duracao_unidade,
+              valor: dados.valor,
+              observacao: dados.observacao,
+            })
+            if (error) throw error
+            await carregar()
+            fecharModal()
           }}
           onCancelar={fecharModal}
         />
@@ -94,23 +96,20 @@ export function ProjetosFuturos() {
           titulo="Alterar Projeto"
           inicial={selecionado}
           onConfirmar={async (dados) => {
-            try {
-              await invoke('alterar_projeto', {
-                id: selecionado.id,
-                descricao: dados.descricao,
-                status: dados.status,
-                periodo: dados.periodo,
-                duracaoValor: dados.duracao_valor,
-                duracaoUnidade: dados.duracao_unidade,
-                valor: dados.valor,
-                observacao: dados.observacao,
-              })
-              await carregar()
-              setSelecionado(null)
-              fecharModal()
-            } catch (e) {
-              console.error('alterar_projeto:', e)
-            }
+            const { error } = await supabase.from('projetos_futuros').update({
+              descricao: dados.descricao,
+              status: dados.status,
+              periodo: dados.periodo,
+              duracao_valor: dados.duracao_valor,
+              duracao_unidade: dados.duracao_unidade,
+              valor: dados.valor,
+              observacao: dados.observacao,
+              alterado_em: new Date().toISOString(),
+            }).eq('id', selecionado.id)
+            if (error) throw error
+            await carregar()
+            setSelecionado(null)
+            fecharModal()
           }}
           onCancelar={fecharModal}
         />
@@ -120,7 +119,11 @@ export function ProjetosFuturos() {
         <ModalAlterarPrioridade
           projeto={selecionado}
           onConfirmar={async (prioridade) => {
-            await invoke('alterar_prioridade_projeto', { id: selecionado.id, prioridade })
+            const { error } = await supabase.from('projetos_futuros').update({
+              prioridade,
+              alterado_em: new Date().toISOString(),
+            }).eq('id', selecionado.id)
+            if (error) throw error
             await carregar()
             setSelecionado(null)
             fecharModal()
@@ -134,7 +137,8 @@ export function ProjetosFuturos() {
           titulo="Apagar Projeto"
           mensagem="Deseja mesmo apagar este projeto? Esta ação é permanente e não poderá ser desfeita."
           onConfirmar={async () => {
-            await invoke('apagar_projeto', { id: selecionado.id })
+            const { error } = await supabase.from('projetos_futuros').delete().eq('id', selecionado.id)
+            if (error) throw error
             await carregar()
             setSelecionado(null)
             fecharModal()
