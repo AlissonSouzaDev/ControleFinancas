@@ -1,6 +1,6 @@
 # Controle de Finanças
 
-Aplicativo desktop de controle financeiro pessoal construído com Tauri v2 + React + TypeScript. Permite gerenciar pagamentos e recebimentos mensais, além de planejar projetos e objetivos futuros — tudo armazenado localmente via SQLite.
+Aplicativo desktop de controle financeiro pessoal construído com Tauri v2 + React + TypeScript. Permite gerenciar pagamentos e recebimentos mensais, além de planejar projetos e objetivos futuros — com dados armazenados no Supabase (PostgreSQL na nuvem).
 
 ## Funcionalidades
 
@@ -22,7 +22,6 @@ Aplicativo desktop de controle financeiro pessoal construído com Tauri v2 + Rea
 ### Geral
 - Tema **dark/light** com persistência em `localStorage`
 - Interface totalmente em português
-- Dados armazenados localmente — sem dependência de internet ou servidor externo
 
 ## Stack
 
@@ -31,8 +30,8 @@ Aplicativo desktop de controle financeiro pessoal construído com Tauri v2 + Rea
 | Interface | React 19 + TypeScript |
 | Estilo | Tailwind CSS 3 |
 | Desktop | Tauri v2 |
-| Backend | Rust |
-| Banco de dados | SQLite (via rusqlite) |
+| Banco de dados | Supabase (PostgreSQL) |
+| Cliente DB | @supabase/supabase-js |
 | Formulários | react-hook-form + Zod |
 | Roteamento | react-router-dom |
 | Build | Vite |
@@ -42,12 +41,18 @@ Aplicativo desktop de controle financeiro pessoal construído com Tauri v2 + Rea
 - [Node.js](https://nodejs.org/) 18+
 - [Rust](https://www.rust-lang.org/tools/install) (stable)
 - [Tauri CLI v2](https://tauri.app/start/prerequisites/)
+- Projeto no [Supabase](https://supabase.com/) com as tabelas criadas
 
 ## Instalação e Uso
 
 ```bash
 # Instalar dependências
 npm install
+
+# Configurar variáveis de ambiente
+# Crie um arquivo .env na raiz com:
+# VITE_SUPABASE_URL=https://<projeto>.supabase.co
+# VITE_SUPABASE_ANON_KEY=<anon-key>
 
 # Rodar em modo desenvolvimento
 npm run tauri dev
@@ -56,30 +61,17 @@ npm run tauri dev
 npm run tauri build
 ```
 
-## Banco de Dados
-
-O banco SQLite é criado automaticamente na primeira execução e fica armazenado em:
-
-```
-Windows: C:\Users\<usuário>\AppData\Local\controlefinancas\db.sqlite3
-```
-
-As migrações de schema são aplicadas automaticamente e de forma condicional a cada inicialização, preservando os dados existentes.
-
 ## Estrutura do Projeto
 
 ```
 ├── src/                        # Frontend React
 │   ├── components/             # Componentes reutilizáveis e de UI
+│   ├── lib/                    # Cliente Supabase
 │   ├── pages/                  # Páginas da aplicação
 │   ├── schemas/                # Schemas de validação Zod
 │   ├── types/                  # Interfaces e tipos TypeScript
 │   └── utils/                  # Funções utilitárias
-├── src-tauri/                  # Backend Rust + configuração Tauri
-│   └── src/
-│       ├── orcamento_mensal/   # Commands e model do orçamento mensal
-│       ├── projetos_futuros/   # Commands e model dos projetos futuros
-│       └── migrations.rs       # Migrações do banco de dados
+├── src-tauri/                  # Shell desktop Tauri (Rust)
 └── public/
     └── icons/                  # Ícones SVG da interface
 ```

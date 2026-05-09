@@ -9,7 +9,7 @@ import { PeriodoNav } from '../components/ui/orcamentoMensal/PeriodoNav'
 import { ListaPagar } from '../components/ui/orcamentoMensal/ListaPagar'
 import { ModalForm } from '../components/modals/orcamentoMensal/ModalForm'
 import { AcoesBar } from '../components/ui/orcamentoMensal/AcoesBar'
-import { invoke } from '@tauri-apps/api/core'
+import { supabase } from '../lib/supabase'
 
 export function OrcamentoMensal() {
   const [periodo, setPeriodo] = useState(periodoAtual)
@@ -19,12 +19,18 @@ export function OrcamentoMensal() {
   const [modal, setModal] = useState<ModalOrcamentoMensal>(null)
 
   const carregar = useCallback(async () => {
-    const [regs, tots] = await Promise.all([
-      invoke<Pagamento[]>('listar_registros', { periodo }),
-      invoke<Totais>('buscar_totais', { periodo }),
-    ])
+    const { data, error } = await supabase
+      .from('orcamento_mensal')
+      .select('*')
+      .eq('periodo', periodo)
+      .order('tipo')
+      .order('criado_em')
+    if (error) throw error
+    const regs = (data ?? []) as Pagamento[]
     setPagamentos(regs)
-    setTotais(tots)
+    const total_pagar = regs.filter(r => r.tipo === 'a_pagar').reduce((s, r) => s + r.valor_total, 0)
+    const total_receber = regs.filter(r => r.tipo === 'a_receber').reduce((s, r) => s + r.valor_total, 0)
+    setTotais({ total_pagar, total_receber, diferenca: total_receber - total_pagar })
   }, [periodo])
 
   useEffect(() => { carregar() }, [carregar])
@@ -72,14 +78,15 @@ export function OrcamentoMensal() {
           titulo="Criar Pagamento"
           periodo={periodo}
           onConfirmar={async (dados) => {
-            await invoke('criar_registro', {
+            const { error } = await supabase.from('orcamento_mensal').insert({
               periodo,
               tipo: dados.tipo,
               descricao: dados.descricao,
-              dataVencimento: dados.data_vencimento,
-              valorTotal: dados.valor_total,
-              valorRealizado: dados.valor_realizado,
+              data_vencimento: dados.data_vencimento,
+              valor_total: dados.valor_total,
+              valor_realizado: dados.valor_realizado ?? 0,
             })
+            if (error) throw error
             await carregar()
             fecharModal()
           }}
@@ -93,14 +100,15 @@ export function OrcamentoMensal() {
           periodo={periodo}
           inicial={selecionado}
           onConfirmar={async (dados) => {
-            await invoke('alterar_registro', {
-              id: selecionado.id,
+            const { error } = await supabase.from('orcamento_mensal').update({
               tipo: dados.tipo,
               descricao: dados.descricao,
-              dataVencimento: dados.data_vencimento,
-              valorTotal: dados.valor_total,
-              valorRealizado: dados.valor_realizado,
-            })
+              data_vencimento: dados.data_vencimento,
+              valor_total: dados.valor_total,
+              valor_realizado: dados.valor_realizado ?? 0,
+              alterado_em: new Date().toISOString(),
+            }).eq('id', selecionado.id)
+            if (error) throw error
             await carregar()
             fecharModal()
           }}
@@ -112,12 +120,13 @@ export function OrcamentoMensal() {
         <ModalAlterarStatus
           registro={selecionado}
           onConfirmar={async (dados) => {
-            await invoke('alterar_status', {
-              id: selecionado.id,
-              statusPagamento: dados.status_pagamento,
-              valorRealizado: dados.valor_realizado,
+            const { error } = await supabase.from('orcamento_mensal').update({
+              status_pagamento: dados.status_pagamento,
+              valor_realizado: dados.valor_realizado ?? 0,
               observacao: dados.observacao,
-            })
+              alterado_em: new Date().toISOString(),
+            }).eq('id', selecionado.id)
+            if (error) throw error
             await carregar()
             setSelecionado(null)
             fecharModal()
@@ -133,10 +142,11 @@ export function OrcamentoMensal() {
           variante="warning"
           textoBotao="Alterar"
           onConfirmar={async () => {
-            await invoke('alterar_prioridade', {
-              id: selecionado.id,
+            const { error } = await supabase.from('orcamento_mensal').update({
               prioridade: !selecionado.prioridade,
-            })
+              alterado_em: new Date().toISOString(),
+            }).eq('id', selecionado.id)
+            if (error) throw error
             await carregar()
             setSelecionado(null)
             fecharModal()
@@ -150,7 +160,8 @@ export function OrcamentoMensal() {
           titulo="Apagar Pagamento"
           mensagem="Deseja mesmo apagar este Pagamento? Esta ação é permanente e não poderá ser desfeita em seu ledger financeiro."
           onConfirmar={async () => {
-            await invoke('apagar_registro', { id: selecionado.id })
+            const { error } = await supabase.from('orcamento_mensal').delete().eq('id', selecionado.id)
+            if (error) throw error
             setSelecionado(null)
             await carregar()
             fecharModal()
@@ -164,7 +175,8 @@ export function OrcamentoMensal() {
           titulo="Apagar todos do mês"
           mensagem={`Deseja apagar todos os pagamentos de ${periodoLabel(periodo)}? Esta ação é permanente.`}
           onConfirmar={async () => {
-            await invoke('apagar_todos_mes', { periodo })
+            const { error } = await supabase.from('orcamento_mensal').delete().eq('periodo', periodo)
+            if (error) throw error
             setSelecionado(null)
             await carregar()
             fecharModal()
